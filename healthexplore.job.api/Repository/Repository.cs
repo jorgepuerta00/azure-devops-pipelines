@@ -57,7 +57,13 @@
                         indexRoot++;
                     }
 
-                    return new List<T>();
+                    List<T> listValuesObjectFound = new List<T>(1);
+                    foreach (var valuesFound in listValuesFound)
+                    {
+                        listValuesObjectFound.Add(valuesFound.Result.ToObject<T>());
+                    }
+
+                    return listValuesObjectFound;
                 }
             }
             catch
