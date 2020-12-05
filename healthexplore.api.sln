@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.808.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "healthexplore.job.api", "healthexplore.job.api\healthexplore.job.api.csproj", "{E13683F6-77AB-4C20-AD50-9E4EFF0506EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "healthexplore.filters.api", "healthexplore.filters.api\healthexplore.filters.api.csproj", "{129A225B-9E8E-422C-A58D-BB001B158A16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{308CEFB4-5CC1-4E25-A68C-53AB01E5C43B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{CFE17482-8FC8-4190-BED0-AA633F7CCAD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "healthexplore.api.test", "healthexplore.api.test\healthexplore.api.test.csproj", "{ABAF134F-1B79-4CF1-84D9-8CF64135F42D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArmTemplates", "ArmTemplates", "{0137BEA8-ECF5-4688-9C9C-D13E831B73B5}"
+	ProjectSection(SolutionItems) = preProject
+		container-webapp-template.json = container-webapp-template.json
+		containerRegistry-template.json = containerRegistry-template.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E13683F6-77AB-4C20-AD50-9E4EFF0506EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E13683F6-77AB-4C20-AD50-9E4EFF0506EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E13683F6-77AB-4C20-AD50-9E4EFF0506EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E13683F6-77AB-4C20-AD50-9E4EFF0506EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{129A225B-9E8E-422C-A58D-BB001B158A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{129A225B-9E8E-422C-A58D-BB001B158A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{129A225B-9E8E-422C-A58D-BB001B158A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{129A225B-9E8E-422C-A58D-BB001B158A16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABAF134F-1B79-4CF1-84D9-8CF64135F42D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABAF134F-1B79-4CF1-84D9-8CF64135F42D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABAF134F-1B79-4CF1-84D9-8CF64135F42D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABAF134F-1B79-4CF1-84D9-8CF64135F42D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {199ABF25-24CC-4732-A26F-AC2F7E8362C2}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{129A225B-9E8E-422C-A58D-BB001B158A16} = {308CEFB4-5CC1-4E25-A68C-53AB01E5C43B}
+		{E13683F6-77AB-4C20-AD50-9E4EFF0506EC} = {308CEFB4-5CC1-4E25-A68C-53AB01E5C43B}
+		{ABAF134F-1B79-4CF1-84D9-8CF64135F42D} = {CFE17482-8FC8-4190-BED0-AA633F7CCAD2}
+	EndGlobalSection
+EndGlobal

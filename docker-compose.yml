@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  healthexplore.job.api:
+    image: ${DOCKER_REGISTRY-}healthexplorejob
+    build:
+      context: .
+      dockerfile: healthexplore.job.api/Dockerfile

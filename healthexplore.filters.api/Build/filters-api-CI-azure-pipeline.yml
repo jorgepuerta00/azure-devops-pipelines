@@ -1,0 +1,152 @@
+﻿# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include: 
+    - master
+
+variables:
+  buildConfiguration: 'Release'
+  location: 'East US'
+  acrHostName: 'healthexplorecontaineracr.azurecr.io'
+  acrName: 'healthexplorecontaineracr'
+  rgName: 'healthexplorecontaineracr-rg'
+  imageName: 'filtersapi'
+  webAppName: 'healthexplorefiltersapi'
+  hostingPlanName: 'healthexploreappserviceplan'
+  azureSubscription: 'AzureSC'
+
+stages:
+
+# Build Stage
+- stage: BuildAndTest
+  jobs:
+  - job: BuildAndTest
+    pool:
+      vmImage: 'Ubuntu-20.04'
+    steps:
+
+    # Create or update the ACR resource
+    - task: AzureResourceGroupDeployment@2
+      displayName: 'Azure Deployment: Create Azure Container Registry'
+      inputs:
+        azureSubscription: '$(azureSubscription)'
+        resourceGroupName: '$(rgName)'
+        location: $(location)
+        csmFile: '$(System.DefaultWorkingDirectory)/**/containerRegistry-template.json'
+        overrideParameters: '-registryName "$(acrName)" -registryLocation "$(location)" -registrySku standard'
+
+    # Install .NET Core sdk 
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core sdk'
+      inputs:
+        packageType: sdk
+        version: 3.1.x
+        installationPath: $(Agent.ToolsDirectory)/dotnet
+    
+    # Restore dependencies
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+      displayName: 'Restore Nuget Packages'
+    
+    # Build app
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '--no-restore'
+      displayName: 'Build projects'
+
+    # Run unit tests 
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'test'
+        projects: '**/*Test.csproj'
+        arguments: '--no-restore'
+      displayName: 'Run Tests'
+
+    # Publish the app
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '**/healthexplore.filters.api.csproj'
+        arguments: '--configuration $(buildConfiguration) --no-restore'
+        modifyOutputPath: false
+      displayName: 'Publish healthexplore.filters.api'
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+    # Build container image
+    - task: Docker@1
+      displayName: 'Build container image'
+      inputs:
+        azureSubscriptionEndpoint: '$(azureSubscription)'
+        azureContainerRegistry: '$(acrHostName)'
+        imageName: '$(imageName):$(Build.BuildId)'
+        useDefaultContext: false
+        buildContext: '$(System.DefaultWorkingDirectory)'
+        dockerFile: '**/healthexplore.UserAssets.Api/Dockerfile'
+
+    # Push container image
+    - task: Docker@1
+      displayName: 'Push container image'
+      inputs:
+        azureSubscriptionEndpoint: '$(azureSubscription)'
+        azureContainerRegistry: '$(acrHostName)'
+        command: 'Push an image'
+        imageName: '$(imageName):$(Build.BuildId)'
+
+    # Copy ARM templates
+    - task: CopyFiles@2
+      displayName: 'Copy ARM templates'
+      inputs:
+        Contents: '**template.json*'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    
+    # Publish the app as an artifact
+    - publish: $(Build.StagingDirectory)
+      artifact: app
+
+# Staging release
+- stage: Staging
+  jobs:
+  - job: Release
+    pool:
+      vmImage: 'Ubuntu-20.04'
+    steps:
+    # Don't clone the repo
+    - checkout: none
+
+    # Download the published application artifact
+    - download: current
+      artifact: app
+
+    # Create or update Azure App Service
+    - task: AzureResourceGroupDeployment@2
+      displayName: 'Azure Deployment: Create Azure App Service'
+      inputs:
+        azureSubscription: '$(azureSubscription)'
+        resourceGroupName: '$(rgName)'
+        location: '$(location)'
+        csmFile: '$(Pipeline.Workspace)/**/container-webapp-template.json'
+        overrideParameters: '-webAppName $(webAppName) -hostingPlanName $(hostingPlanName) -appInsightsLocation "$(location)" -sku "S1 Standard" -registryName $(acrName) -registryLocation "$(location)" -registrySku standard -imageName $(imageName):$(Build.BuildId)'
+
+    # Deploy App Service
+    #- task: AzureRmWebAppDeployment@3
+    #  displayName: 'Deploy Azure App Service'
+    #  inputs:
+    #    azureSubscription: '$(azureSubscription)'
+    #    appType: applinux
+    #    WebAppName: $(webAppName)
+    #    DockerNamespace: $(acrHostName)
+    #    DockerRepository: $(webAppName)
+    #    DockerImageTag: '$(Build.BuildId)'
+    #    WebAppUri: webAppUrl
+    #    TakeAppOfflineFlag: true
+    #    UseWebDeploy: true
+    #    RenameFilesFlag: true
