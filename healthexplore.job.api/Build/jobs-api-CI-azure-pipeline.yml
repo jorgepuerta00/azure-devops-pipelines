@@ -90,7 +90,7 @@ stages:
         imageName: '$(imageName):$(Build.BuildId)'
         useDefaultContext: false
         buildContext: '$(System.DefaultWorkingDirectory)'
-        dockerFile: '**/healthexplore.UserAssets.Api/Dockerfile'
+        dockerFile: '**/healthexplore.job.api/Dockerfile'
 
     # Push container image
     - task: Docker@1
