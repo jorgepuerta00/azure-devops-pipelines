@@ -137,16 +137,16 @@ stages:
         overrideParameters: '-webAppName $(webAppName) -hostingPlanName $(hostingPlanName) -appInsightsLocation "$(location)" -sku "S1 Standard" -registryName $(acrName) -registryLocation "$(location)" -registrySku standard -imageName $(imageName):$(Build.BuildId)'
 
     # Deploy App Service
-    - task: AzureRmWebAppDeployment@3
-      displayName: 'Deploy Azure App Service'
-      inputs:
-        azureSubscription: '$(azureSubscription)'
-        appType: applinux
-        WebAppName: $(webAppName)
-        DockerNamespace: $(acrHostName)
-        DockerRepository: $(webAppName)
-        DockerImageTag: '$(Build.BuildId)'
-        WebAppUri: webAppUrl
-        TakeAppOfflineFlag: true
-        UseWebDeploy: true
-        RenameFilesFlag: true
+    #- task: AzureRmWebAppDeployment@3
+    #  displayName: 'Deploy Azure App Service'
+    #  inputs:
+    #    azureSubscription: '$(azureSubscription)'
+    #    appType: applinux
+    #    WebAppName: $(webAppName)
+    #    DockerNamespace: $(acrHostName)
+    #    DockerRepository: $(webAppName)
+    #    DockerImageTag: '$(Build.BuildId)'
+    #    WebAppUri: webAppUrl
+    #    TakeAppOfflineFlag: true
+    #    UseWebDeploy: true
+    #    RenameFilesFlag: true
