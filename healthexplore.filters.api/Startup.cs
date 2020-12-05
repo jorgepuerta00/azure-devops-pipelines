@@ -33,6 +33,11 @@ namespace healthexplore.filters.api
             services.Configure<ConnectionString>(Configuration.GetSection("ConnectionString"));
             services.AddScoped<IRepository<Filters>, Repository<Filters>>();
 
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+            });
+
             services.AddSwaggerGen(config => {
                 config.CustomSchemaIds(x => x.FullName);
                 config.EnableAnnotations();
@@ -54,6 +59,8 @@ namespace healthexplore.filters.api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Job API v1");
                 c.RoutePrefix = string.Empty; //Swagger at the  project root URL
             });
+
+            app.UseCors(options => options.AllowAnyOrigin());
 
             app.UseHttpsRedirection();
 
