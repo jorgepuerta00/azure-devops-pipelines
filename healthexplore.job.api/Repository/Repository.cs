@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Models;
+    using Newtonsoft.Json.Linq;
 
     public class Repository<T> : IRepository<T> where T : Job
     {
@@ -44,17 +45,61 @@
                 using (StreamReader stream = File.OpenText(filePath))
                 {
                     string jsonString = await stream.ReadToEndAsync();
-                    var dataSet = JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
+                    var json = JToken.Parse(jsonString);
 
-                    var newDataSet = dataSet.Where(j => j.Name.ToLower().Contains(keyword) || j.JobTitle.ToLower().Contains(keyword)).ToList();
+                    listValuesFound = new List<ResultSearch>();
+                    int indexRoot = 0;
 
-                    return newDataSet;
+                    foreach (var root in json)
+                    {
+                        var children = root.Children();
+                        Fetch(children, keyword, root, indexRoot);
+                        indexRoot++;
+                    }
+
+                    return new List<T>();
                 }
             }
             catch
             {
                 return new List<T>();
             }
+        }
+
+        static List<ResultSearch> listValuesFound;
+
+        private static void Fetch(IEnumerable<JToken> children, string valueToFind, JToken root, int indexRoot)
+        {
+            foreach (var child in children)
+            {
+                var childTemp = child.Children();
+
+                if (child.HasValues)
+                {
+                    Fetch(childTemp, valueToFind, root, indexRoot);
+                }
+                else
+                {
+                    var valueWithoutChildren = child.ToObject(typeof(object));
+
+                    if (valueWithoutChildren.ToString().ToUpper().Contains(valueToFind.ToUpper()))
+                    {
+                        bool indexExist = listValuesFound.Any(obj => obj.Index == indexRoot);
+                        
+                        if (!indexExist)
+                        {
+                            listValuesFound.Add(new ResultSearch() { Result = root, Index = indexRoot });
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        public class ResultSearch
+        {
+            public JToken Result { get; set; }
+            public int Index { get; set; }
         }
     }
 }
