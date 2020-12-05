@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArmTemplates", "ArmTemplate
 		containerRegistry-template.json = containerRegistry-template.json
 	EndProjectSection
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6F77746D-EDFD-45F2-AA7C-93144AD9D9EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{ABAF134F-1B79-4CF1-84D9-8CF64135F42D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABAF134F-1B79-4CF1-84D9-8CF64135F42D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABAF134F-1B79-4CF1-84D9-8CF64135F42D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F77746D-EDFD-45F2-AA7C-93144AD9D9EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F77746D-EDFD-45F2-AA7C-93144AD9D9EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F77746D-EDFD-45F2-AA7C-93144AD9D9EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F77746D-EDFD-45F2-AA7C-93144AD9D9EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
